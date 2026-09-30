@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Momen — Foto semua orang, jadi satu album rapi</title>
+<meta name="description" content="Tamu scan QR, semua foto acara otomatis terkumpul. AI memilih yang terbaik, setiap tamu menerima album fotonya sendiri. Pernikahan, ulang tahun, acara keluarga, open trip, gathering kantor.">
+<meta property="og:title" content="Momen — Foto semua orang, jadi satu album rapi">
+<meta property="og:description" content="Scan QR, tanpa aplikasi. Semua foto acara terkumpul & dirapikan AI. Setiap tamu dapat album fotonya sendiri.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://momen.nino.id/">
+<link rel="canonical" href="https://momen.nino.id/">
+<!-- TODO: add og:image (1200x630 PNG) for rich link previews on X/Threads -->
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📸</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#FBF8F3;
+  --bg-soft:#F4EFE7;
+  --ink:#221A33;
+  --ink-soft:#5C5470;
+  --primary:#7C5CFF;
+  --primary-deep:#5B3FD4;
+  --warm:#FF8A5C;
+  --leaf:#2FB886;
+  --card:#FFFFFF;
+  --line:#E9E2D6;
+  --radius:20px;
+  --shadow:0 10px 40px -12px rgba(34,26,51,.14);
+  --shadow-sm:0 4px 18px -6px rgba(34,26,51,.12);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Plus Jakarta Sans',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+  background:var(--bg);color:var(--ink);
+  line-height:1.65;-webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:1080px;margin:0 auto;padding:0 24px}
+a{color:inherit;text-decoration:none}
+img{max-width:100%;display:block}
+
+/* ---------- nav ---------- */
+.nav{
+  position:sticky;top:0;z-index:50;
+  background:rgba(251,248,243,.85);backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--line);
+}
+.nav-in{display:flex;align-items:center;justify-content:space-between;height:64px}
+.brand{display:flex;align-items:center;gap:9px;font-weight:800;font-size:1.25rem;letter-spacing:-.02em}
+.brand-dot{width:30px;height:30px;border-radius:9px;background:linear-gradient(135deg,var(--primary),var(--warm));display:grid;place-items:center;color:#fff;font-size:15px}
+.nav-links{display:flex;gap:26px;font-size:.92rem;font-weight:500;color:var(--ink-soft)}
+.nav-links a:hover{color:var(--ink)}
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  font-weight:700;font-size:.95rem;border-radius:14px;padding:12px 22px;
+  border:none;cursor:pointer;transition:transform .15s ease,box-shadow .15s ease,background .15s ease;
+  font-family:inherit;
+}
+.btn:active{transform:translateY(1px)}
+.btn-primary{background:linear-gradient(135deg,var(--primary),var(--primary-deep));color:#fff;box-shadow:0 8px 22px -8px rgba(124,92,255,.55)}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 12px 26px -8px rgba(124,92,255,.6)}
+.btn-ghost{background:transparent;color:var(--ink);border:1.5px solid var(--line)}
+.btn-ghost:hover{border-color:var(--ink-soft);background:#fff}
+.btn-wa{background:#1FAF5A;color:#fff;box-shadow:0 8px 22px -8px rgba(31,175,90,.5)}
+.btn-wa:hover{transform:translateY(-2px)}
+.nav .btn{padding:9px 18px;font-size:.88rem}
+@media(max-width:760px){.nav-links{display:none}}
+
+/* ---------- hero ---------- */
+.hero{padding:76px 0 40px;position:relative;overflow:hidden}
+.hero-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:48px;align-items:center}
+@media(max-width:880px){.hero-grid{grid-template-columns:1fr;gap:40px}}
+.eyebrow{
+  display:inline-flex;align-items:center;gap:8px;
+  background:#fff;border:1px solid var(--line);border-radius:999px;
+  padding:7px 16px;font-size:.82rem;font-weight:600;color:var(--ink-soft);
+  box-shadow:var(--shadow-sm);margin-bottom:22px;
+}
+.eyebrow .pulse{width:8px;height:8px;border-radius:50%;background:var(--leaf);animation:pulse 2s infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(47,184,134,.5)}70%{box-shadow:0 0 0 9px rgba(47,184,134,0)}100%{box-shadow:0 0 0 0 rgba(47,184,134,0)}}
+h1{
+  font-size:clamp(2.3rem,5.2vw,3.7rem);
+  line-height:1.12;letter-spacing:-.035em;font-weight:800;
+}
+h1 .grad{
+  background:linear-gradient(100deg,var(--primary) 10%,var(--warm) 90%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+.hero-sub{margin:22px 0 30px;font-size:1.1rem;color:var(--ink-soft);max-width:34em}
+.hero-sub strong{color:var(--ink)}
+.hero-ctas{display:flex;gap:14px;flex-wrap:wrap}
+.hero-note{margin-top:16px;font-size:.86rem;color:var(--ink-soft)}
+.hero-note b{color:var(--leaf)}
+
+/* hero visual: phone + photo tiles + wall */
+.hero-visual{position:relative;display:flex;justify-content:center;min-height:420px}
+.phone{
+  width:250px;height:500px;border-radius:38px;background:#fff;
+  border:8px solid var(--ink);box-shadow:var(--shadow);
+  padding:18px 14px;position:relative;z-index:2;
+  display:flex;flex-direction:column;gap:10px;
+}
+.phone-notch{width:90px;height:20px;background:var(--ink);border-radius:999px;margin:0 auto}
+.phone h3{font-size:.95rem;font-weight:800;text-align:center}
+.phone-meta{font-size:.7rem;color:var(--ink-soft);text-align:center;margin-top:-6px}
+.qr-card{
+  background:var(--bg-soft);border:1px dashed #C9BFA9;border-radius:14px;
+  padding:14px;display:flex;flex-direction:column;align-items:center;gap:8px;
+}
+.qr-card svg{width:120px;height:120px}
+.qr-card small{font-size:.72rem;color:var(--ink-soft);text-align:center;line-height:1.4}
+.tile-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}
+.tile{
+  aspect-ratio:1;border-radius:10px;display:grid;place-items:center;
+  font-size:1.15rem;color:#fff;filter:saturate(1.05);
+}
+.t1{background:linear-gradient(135deg,#FF9A62,#FF5A5F)}
+.t2{background:linear-gradient(135deg,#7C5CFF,#B18CFF)}
+.t3{background:linear-gradient(135deg,#2FB886,#7ED9B0)}
+.t4{background:linear-gradient(135deg,#FFC93D,#FF8A5C)}
+.t5{background:linear-gradient(135deg,#5EC5F2,#7C5CFF)}
+.t6{background:linear-gradient(135deg,#FF6BA2,#FF5A5F)}
+.tile.more{background:var(--ink);font-size:.68rem;font-weight:700}
+.float-tile{
+  position:absolute;border-radius:16px;display:grid;place-items:center;
+  font-size:1.5rem;color:#fff;box-shadow:var(--shadow);z-index:3;
+  animation:float 6s ease-in-out infinite;
+}
+.ft1{width:74px;height:74px;background:linear-gradient(135deg,#FF9A62,#FF5A5F);top:36px;left:6%;animation-delay:0s}
+.ft2{width:60px;height:60px;background:linear-gradient(135deg,#7C5CFF,#B18CFF);bottom:120px;left:2%;animation-delay:1.4s}
+.ft3{width:66px;height:66px;background:linear-gradient(135deg,#2FB886,#7ED9B0);top:80px;right:4%;animation-delay:.7s}
+.ft4{width:54px;height:54px;background:linear-gradient(135deg,#FFC93D,#FF8A5C);bottom:60px;right:10%;animation-delay:2.1s}
+@keyframes float{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-14px) rotate(3deg)}}
+/* keep floating tiles clear of the phone/QR on narrow screens */
+@media(max-width:640px){
+  .ft2,.ft4{display:none}
+  .ft1{width:50px;height:50px;left:0;top:26px;font-size:1.1rem}
+  .ft3{width:46px;height:46px;right:0;top:64px;font-size:1.05rem}
+}
+.live-wall{
+  position:absolute;bottom:-6px;left:50%;transform:translateX(-50%);
+  background:var(--ink);color:#fff;border-radius:16px;padding:10px 18px;
+  font-size:.75rem;font-weight:600;display:flex;align-items:center;gap:8px;
+  box-shadow:var(--shadow);z-index:4;white-space:nowrap;
+}
+.live-wall .dot{width:8px;height:8px;border-radius:50%;background:#FF5A5F;animation:pulse-r 1.6s infinite}
+@keyframes pulse-r{0%,100%{opacity:1}50%{opacity:.3}}
+
+/* ---------- sections ---------- */
+.section{padding:84px 0}
+.section-head{max-width:620px;margin:0 auto 48px;text-align:center}
+.kicker{
+  display:inline-block;font-size:.78rem;font-weight:800;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--primary-deep);margin-bottom:14px;
+}
+.section-head h2{font-size:clamp(1.7rem,3.4vw,2.4rem);letter-spacing:-.03em;font-weight:800;line-height:1.2}
+.section-head p{margin-top:14px;color:var(--ink-soft)}
+
+/* segments */
+.seg-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+@media(max-width:880px){.seg-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:560px){.seg-grid{grid-template-columns:1fr}}
+.seg-card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:26px 22px;transition:transform .18s ease,box-shadow .18s ease;
+}
+.seg-card:hover{transform:translateY(-5px);box-shadow:var(--shadow)}
+.seg-emoji{
+  width:52px;height:52px;border-radius:14px;display:grid;place-items:center;
+  font-size:1.5rem;margin-bottom:16px;background:var(--bg-soft);
+}
+.seg-card h3{font-size:1.05rem;font-weight:700;margin-bottom:7px;letter-spacing:-.01em}
+.seg-card p{font-size:.9rem;color:var(--ink-soft)}
+
+/* steps */
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;counter-reset:step}
+@media(max-width:880px){.steps{grid-template-columns:1fr}}
+.step{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:30px 24px;position:relative;
+}
+.step-n{
+  width:40px;height:40px;border-radius:12px;display:grid;place-items:center;
+  font-weight:800;font-size:1.05rem;color:#fff;margin-bottom:18px;
+  background:linear-gradient(135deg,var(--primary),var(--warm));
+}
+.step h3{font-size:1.08rem;font-weight:700;margin-bottom:9px;letter-spacing:-.01em}
+.step p{font-size:.92rem;color:var(--ink-soft)}
+
+/* features */
+.feat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+@media(max-width:880px){.feat-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:560px){.feat-grid{grid-template-columns:1fr}}
+.feat{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:24px;display:flex;gap:16px;align-items:flex-start;
+}
+.feat-ic{
+  flex:0 0 44px;width:44px;height:44px;border-radius:12px;
+  display:grid;place-items:center;font-size:1.2rem;background:var(--bg-soft);
+}
+.feat h3{font-size:.98rem;font-weight:700;margin-bottom:5px}
+.feat p{font-size:.87rem;color:var(--ink-soft)}
+
+/* partner band */
+.partner{
+  background:linear-gradient(120deg,#221A33 0%,#3A2B66 55%,#5B3FD4 120%);
+  border-radius:28px;color:#fff;padding:56px 48px;
+  display:grid;grid-template-columns:1.2fr .8fr;gap:36px;align-items:center;
+}
+@media(max-width:880px){.partner{grid-template-columns:1fr;padding:40px 28px}}
+.partner .kicker{color:#C9B8FF}
+.partner h2{font-size:clamp(1.5rem,3vw,2.1rem);letter-spacing:-.025em;line-height:1.25;font-weight:800}
+.partner p{margin-top:14px;color:#D9D2C4;font-size:1rem}
+.partner ul{list-style:none;margin-top:18px;display:flex;flex-direction:column;gap:9px}
+.partner li{display:flex;gap:10px;align-items:flex-start;font-size:.93rem;color:#EDE8F7}
+.partner li::before{content:"✓";flex:0 0 auto;width:20px;height:20px;border-radius:6px;background:rgba(255,255,255,.16);display:grid;place-items:center;font-size:.72rem;font-weight:800}
+.partner-cta{display:flex;flex-direction:column;gap:12px}
+.partner-cta .btn-wa{justify-content:center}
+.partner-cta small{color:#B9AFD6;text-align:center;font-size:.8rem}
+
+/* faq */
+.faq{max-width:720px;margin:0 auto}
+.faq details{
+  background:var(--card);border:1px solid var(--line);border-radius:16px;
+  padding:0 22px;margin-bottom:12px;overflow:hidden;
+}
+.faq summary{
+  cursor:pointer;list-style:none;display:flex;justify-content:space-between;
+  align-items:center;gap:14px;padding:19px 0;font-weight:700;font-size:.98rem;
+}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"+";font-size:1.3rem;font-weight:600;color:var(--primary);transition:transform .2s ease;flex:0 0 auto}
+.faq details[open] summary::after{transform:rotate(45deg)}
+.faq details p{padding:0 0 20px;color:var(--ink-soft);font-size:.93rem}
+
+/* waitlist */
+.waitlist{
+  background:var(--bg-soft);border-radius:28px;padding:56px 48px;
+  display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center;
+}
+@media(max-width:880px){.waitlist{grid-template-columns:1fr;padding:40px 28px}}
+.waitlist h2{font-size:clamp(1.6rem,3vw,2.2rem);letter-spacing:-.03em;font-weight:800;line-height:1.2}
+.waitlist p{margin-top:12px;color:var(--ink-soft)}
+.wl-form{display:flex;flex-direction:column;gap:12px}
+.wl-form label{font-size:.82rem;font-weight:700}
+.field input,.field select{
+  width:100%;padding:13px 16px;border-radius:12px;border:1.5px solid var(--line);
+  background:#fff;font-family:inherit;font-size:.95rem;color:var(--ink);
+  transition:border-color .15s ease;margin-top:6px;
+}
+.field input:focus,.field select:focus{outline:none;border-color:var(--primary)}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.chip{
+  border:1.5px solid var(--line);background:#fff;border-radius:999px;
+  padding:7px 15px;font-size:.83rem;font-weight:600;cursor:pointer;
+  transition:all .15s ease;user-select:none;
+}
+.chip.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.wl-form .btn-primary{margin-top:6px}
+.wl-alt{font-size:.82rem;color:var(--ink-soft);text-align:center}
+.wl-alt a{color:var(--primary);font-weight:700}
+.wl-success{
+  display:none;background:#E9F8F1;border:1px solid #BEE7D4;color:#186A47;
+  border-radius:12px;padding:14px 16px;font-size:.9rem;font-weight:600;
+}
+
+/* footer */
+.footer{border-top:1px solid var(--line);padding:44px 0 40px;background:#fff}
+.footer-in{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap;align-items:flex-start}
+.footer .brand{font-size:1.05rem}
+.footer-note{font-size:.84rem;color:var(--ink-soft);max-width:38em;margin-top:10px}
+.footer-links{display:flex;gap:22px;font-size:.88rem;font-weight:600;color:var(--ink-soft)}
+.footer-links a:hover{color:var(--ink)}
+.footer-legal{margin-top:28px;padding-top:22px;border-top:1px solid var(--line);font-size:.78rem;color:var(--ink-soft);display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap}
+
+/* reveal on scroll */
+.reveal{opacity:0;transform:translateY(22px);transition:opacity .6s ease,transform .6s ease}
+.reveal.vis{opacity:1;transform:none}
+@media(prefers-reduced-motion:reduce){
+  .reveal{opacity:1;transform:none;transition:none}
+  .float-tile{animation:none}
+}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="wrap nav-in">
+    <a class="brand" href="#top" aria-label="Momen — beranda">
+      <span class="brand-dot">📸</span> Momen
+    </a>
+    <div class="nav-links">
+      <a href="#cara-kerja">Cara Kerja</a>
+      <a href="#fitur">Fitur</a>
+      <a href="#untuk-acara">Untuk Acara</a>
+      <a href="#mitra">Mitra</a>
+      <a href="#faq">FAQ</a>
+    </div>
+    <a class="btn btn-primary" href="#early-access">Early Access</a>
+  </div>
+</nav>
+
+<header class="hero" id="top">
+  <div class="wrap hero-grid">
+    <div>
+      <span class="eyebrow"><span class="pulse"></span> Early access — pilot gratis untuk acara pertamamu</span>
+      <h1>Foto semua orang,<br>jadi <span class="grad">satu album rapi</span>.</h1>
+      <p class="hero-sub">
+        Tamu cukup <strong>scan QR</strong> — tanpa install aplikasi, tanpa bikin akun.
+        Semua foto otomatis terkumpul, <strong>AI memilih yang terbaik</strong>, dan setiap
+        tamu menerima album berisi <strong>foto mereka sendiri</strong>.
+        Pernikahan, ulang tahun, arisan keluarga, open trip, gathering kantor — semua momen.
+      </p>
+      <div class="hero-ctas">
+        <a class="btn btn-primary" href="#early-access">Daftar Early Access</a>
+        <a class="btn btn-ghost" href="#cara-kerja">Lihat cara kerjanya</a>
+      </div>
+      <p class="hero-note"><b>Gratis untuk pilot pertama</b> · tanpa komitmen · dikembangkan oleh tim di Jakarta</p>
+    </div>
+
+    <div class="hero-visual" aria-hidden="true">
+      <div class="float-tile ft1">💍</div>
+      <div class="float-tile ft2">🎂</div>
+      <div class="float-tile ft3">🏝️</div>
+      <div class="float-tile ft4">⛰️</div>
+      <div class="phone">
+        <div class="phone-notch"></div>
+        <h3>Album: Pernikahan Dinda &amp; Bagas</h3>
+        <p class="phone-meta">Sabtu, 12 September 2026 · 214 tamu</p>
+        <div class="qr-card">
+          <svg viewBox="0 0 29 29" shape-rendering="crispEdges" role="img" aria-label="Contoh QR code">
+            <rect width="29" height="29" fill="#fff"/>
+            <g fill="#221A33">
+              <path d="M1 1h7v7H1zM3 3h3v3H3z"/>
+              <path d="M21 1h7v7h-7zM23 3h3v3h-3z"/>
+              <path d="M1 21h7v7H1zM3 23h3v3H3z"/>
+              <path d="M10 1h2v2h-2zM14 1h2v3h-2zM17 2h2v2h-2zM11 4h2v2h-2zM15 5h3v2h-3zM10 7h2v2h-2zM17 8h2v2h-2z"/>
+              <path d="M1 10h2v2H1zM5 10h2v3H5zM8 11h2v2H8zM12 10h2v2h-2zM16 10h2v3h-2zM20 11h2v2h-2zM24 10h3v2h-3zM2 14h3v2H2zM7 14h2v2H7zM11 14h3v2h-3zM15 15h2v2h-2zM19 14h2v2h-2zM23 14h2v3h-2zM26 15h2v2h-2z"/>
+              <path d="M10 17h2v2h-2zM14 17h3v2h-3zM18 18h2v2h-2zM1 18h2v2H1zM5 19h2v2H5z"/>
+              <path d="M10 21h2v3h-2zM14 21h2v2h-2zM17 22h3v2h-3zM13 24h2v2h-2zM21 21h2v2h-2zM25 21h3v2h-3zM23 24h2v3h-2zM26 26h2v2h-2zM10 26h3v2h-3z"/>
+            </g>
+          </svg>
+          <small>Scan untuk lihat &amp; unggah foto<br>(contoh tampilan)</small>
+        </div>
+        <div class="tile-grid">
+          <div class="tile t1">💍</div><div class="tile t2">🤵</div><div class="tile t3">💐</div>
+          <div class="tile t4">🎉</div><div class="tile t5">🍽️</div><div class="tile more">+2.318</div>
+        </div>
+      </div>
+      <div class="live-wall"><span class="dot"></span> Live Photo Wall — tayang di layar acara</div>
+    </div>
+  </div>
+</header>
+
+<section class="section" id="untuk-acara">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="kicker">Untuk semua acara</span>
+      <h2>Di mana banyak orang memotret, di situ Momen bekerja.</h2>
+      <p>Satu sistem, semua jenis acara — dari resepsi pernikahan sampai open trip bareng orang yang baru dikenal.</p>
+    </div>
+    <div class="seg-grid">
+      <div class="seg-card reveal"><div class="seg-emoji">💍</div><h3>Pernikahan</h3><p>Semua foto tamu terkumpul tanpa harus minta satu-satu — diterima hari itu juga, bukan berminggu-minggu kemudian.</p></div>
+      <div class="seg-card reveal"><div class="seg-emoji">🎂</div><h3>Ulang tahun &amp; pesta</h3><p>Tamu jadi fotografer, dan live photo wall membuat pesta makin hidup.</p></div>
+      <div class="seg-card reveal"><div class="seg-emoji">👶</div><h3>Acara keluarga</h3><p>Aqiqah, tunangan, sunatan, reuni keluarga besar — kenangan dari semua sudut, rapi dalam satu tempat.</p></div>
+      <div class="seg-card reveal"><div class="seg-emoji">🏝️</div><h3>Open trip &amp; traveling</h3><p>Satu trip, puluhan HP milik orang yang baru saling kenal — semua fotonya pulang dalam album rapi, dan tiap orang hanya menerima fotonya sendiri.</p></div>
+      <div class="seg-card reveal"><div class="seg-emoji">🏢</div><h3>Gathering kantor</h3><p>Outbound, rapat akhir tahun, family day — dokumentasi selesai tanpa panitia kejar-kejar file.</p></div>
+      <div class="seg-card reveal"><div class="seg-emoji">⛰️</div><h3>Komunitas &amp; sekolah</h3><p>Reuni, study tour, kegiatan komunitas — album resmi dari sudut pandang semua peserta.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="cara-kerja" style="background:var(--bg-soft)">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="kicker">Cara kerja</span>
+      <h2>Tiga langkah. Tidak ada yang perlu install apa pun.</h2>
+    </div>
+    <div class="steps">
+      <div class="step reveal"><div class="step-n">1</div><h3>Bikin acaramu</h3><p>Atur nama, tanggal, dan warna acara. Kami siapkan QR code-nya — cetak di kartu ucapan, standing banner, atau tempel di meja.</p></div>
+      <div class="step reveal"><div class="step-n">2</div><h3>Tamu scan &amp; unggah</h3><p>Tanpa aplikasi. Tanpa akun. Tanpa daftar kontak. Foto tamu langsung masuk ke album acara — bahkan yang paling anti-apa-apa pun bisa.</p></div>
+      <div class="step reveal"><div class="step-n">3</div><h3>AI merapikan</h3><p>Foto dobel dan blur dibuang otomatis. Setiap tamu menerima album pribadi berisi fotonya saja. Kamu — penyelenggara — menerima semuanya, rapi.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="fitur">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="kicker">Fitur</span>
+      <h2>Dibangun di atas keahlian AI kami.</h2>
+      <p>Momen dikembangkan oleh PT Nino Genio Indonesia — perusahaan AI di Jakarta yang setiap hari membangun sistem AI untuk klien.</p>
+    </div>
+    <div class="feat-grid">
+      <div class="feat reveal"><div class="feat-ic">📱</div><div><h3>Tanpa aplikasi &amp; akun</h3><p>Cukup scan QR dari kamera HP. Semua berjalan di browser, kualitas foto penuh — bukan hasil kompresi grup chat.</p></div></div>
+      <div class="feat reveal"><div class="feat-ic">🖥️</div><div><h3>Live photo wall</h3><p>Tayangkan foto tamu real-time di layar atau LED acara. Momen yang mengundang tepuk tangan.</p></div></div>
+      <div class="feat reveal"><div class="feat-ic">✨</div><div><h3>AI kurasi otomatis</h3><p>Dobel, blur, gelap, tidak sengaja — difilter otomatis. Tersisa foto terbaik dari semua orang.</p></div></div>
+      <div class="feat reveal"><div class="feat-ic">🔒</div><div><h3>Album privat per orang</h3><p>Setiap tamu hanya menerima foto yang ada dirinya — aman untuk acara dengan orang yang baru saling kenal. Pengenalan wajah bersifat opsional.</p></div></div>
+      <div class="feat reveal"><div class="feat-ic">🛡️</div><div><h3>Moderasi aman</h3><p>Unggahan tidak pantas terdeteksi otomatis, dan penyelenggara tetap memegang kendali penuh atas album.</p></div></div>
+      <div class="feat reveal"><div class="feat-ic">⬇️</div><div><h3>Sekali klik, semua tersimpan</h3><p>Unduh seluruh album dalam satu file, kualitas asli. Tidak perlu menyimpan satu-satu dari grup chat.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="mitra">
+  <div class="wrap">
+    <div class="partner reveal">
+      <div>
+        <span class="kicker">Untuk para organizer</span>
+        <h2>Kamu travel organizer, EO, atau fotografer?</h2>
+        <p>Jadikan Momen bagian dari layananmu:</p>
+        <ul>
+          <li>Album ber-brandmu untuk setiap klien — tanpa menambah kerja tim</li>
+          <li>Konten UGC dari tamu yang sudah rapi, terkurasi, dan berizin pakai</li>
+          <li>Selfie matching opsional: tiap tamu hanya menerima fotonya sendiri</li>
+          <li>Mitra pilot mendapat akses gratis untuk 3 acara pertama</li>
+        </ul>
+      </div>
+      <div class="partner-cta">
+        <a class="btn btn-wa" href="https://wa.me/62819797967675?text=Halo%20Momen!%20Saya%20tertarik%20jadi%20mitra%20pilot%20(TO%2FEO%2Ffotografer).%20Bisa%20info%20lebih%20lanjut%3F" target="_blank" rel="noopener">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm5.3 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .3-3.4-.7-2.9-1.2-4.7-4.1-4.9-4.3-.1-.2-1.1-1.5-1.1-2.9s.7-2 1-2.3c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.9 2.1c.1.2.1.4 0 .6l-.4.6-.5.5c-.2.2-.3.4-.1.7.2.3.9 1.5 2 2.4 1.4 1.2 2.5 1.6 2.8 1.7.3.1.5.1.7-.1l1-1.1c.2-.3.4-.2.7-.1l2 1c.3.1.5.2.6.4 0 .1 0 .7-.3 1.3Z"/></svg>
+          Jadi Mitra Pilot
+        </a>
+        <small>Gratis 3 acara pertama · tanpa komitmen</small>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="faq" style="padding-top:20px">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="kicker">FAQ</span>
+      <h2>Pertanyaan yang sering muncul.</h2>
+    </div>
+    <div class="faq reveal">
+      <details open>
+        <summary>Tamu harus install aplikasi?</summary>
+        <p>Tidak. Cukup arahkan kamera HP ke QR code dan unggah dari browser. Tidak perlu akun, tidak perlu login, tidak perlu membagikan nomor HP.</p>
+      </details>
+      <details>
+        <summary>Bagaimana privasinya kalau tamu saling belum kenal?</summary>
+        <p>Ini kekhawatiran yang kami desain sejak awal: setiap tamu menerima album berisi foto mereka sendiri saja, bukan foto semua orang. Album lengkap hanya bisa diakses penyelenggara. Fitur pengenalan wajah sepenuhnya opsional (opt-in) per orang.</p>
+      </details>
+      <details>
+        <summary>Berapa harganya?</summary>
+        <p>Masih tahap early access — pilot pertama gratis. Harga final akan diumumkan saat rilis, dan pendaftar awal mendapat penawaran khusus sebagai terima kasih atas kepercayaannya.</p>
+      </details>
+      <details>
+        <summary>Bisa untuk acara lebih dari satu hari?</summary>
+        <p>Bisa. Acara multi-hari — open trip, retreat, serial acara — didukung sejak awal; album tetap satu dan terkumpul selama acara berlangsung.</p>
+      </details>
+      <details>
+        <summary>Kapan bisa dipakai?</summary>
+        <p>Sedang dikembangkan aktif. Daftar early access di bawah — kamu akan dihubungi begitu slot pilot dibuka, diurutkan dari yang mendaftar paling awal.</p>
+      </details>
+      <details>
+        <summary>Siapa di balik Momen?</summary>
+        <p>Momen adalah eksperimen produk dari <a href="https://nino.id/" target="_blank" rel="noopener" style="color:var(--primary);font-weight:700">PT Nino Genio Indonesia</a> — perusahaan AI di Jakarta yang membangun dan mendeploy sistem AI untuk perusahaan di Indonesia &amp; Asia Tenggara sejak 2021.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="early-access" style="padding-top:20px">
+  <div class="wrap">
+    <div class="waitlist reveal">
+      <div>
+        <span class="kicker">Early access</span>
+        <h2>Jadi yang pertama mencoba.</h2>
+        <p>Daftar sekarang — pilot pertama gratis, dan setiap pendaftar awal kami hubungi lebih dulu saat slot dibuka. Butuh satu menit.</p>
+      </div>
+      <form class="wl-form" id="wlForm">
+        <div class="field">
+          <label for="fNama">Nama kamu</label>
+          <input id="fNama" name="nama" type="text" placeholder="mis. Andini" required>
+        </div>
+        <div class="field">
+          <label for="fWa">Nomor WhatsApp</label>
+          <input id="fWa" name="wa" type="tel" placeholder="mis. 0812 3456 7890" required>
+        </div>
+        <div class="field">
+          <label for="fRole">Kamu adalah…</label>
+          <select id="fRole" name="role" required>
+            <option value="" disabled selected>pilih salah satu</option>
+            <option>Penyelenggara acara (calon/langsung)</option>
+            <option>Travel organizer / EO / gathering</option>
+            <option>Fotografer / videografer</option>
+            <option>Lainnya / cuma penasaran</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Jenis acara yang menarik buat kamu (boleh pilih banyak)</label>
+          <div class="chips" id="chips">
+            <span class="chip" data-v="Pernikahan">💍 Pernikahan</span>
+            <span class="chip" data-v="Ulang tahun / pesta">🎂 Ulang tahun</span>
+            <span class="chip" data-v="Acara keluarga">👶 Keluarga</span>
+            <span class="chip" data-v="Open trip / traveling">🏝️ Open trip</span>
+            <span class="chip" data-v="Gathering kantor">🏢 Kantor</span>
+            <span class="chip" data-v="Komunitas / sekolah">⛰️ Komunitas</span>
+          </div>
+        </div>
+        <button class="btn btn-primary" type="submit">Daftar Early Access →</button>
+        <div class="wl-success" id="wlSuccess">✓ Terima kasih! Chat WhatsApp akan terbuka — tinggal tekan kirim dan kamu masuk daftar.</div>
+        <p class="wl-alt">Lebih suka langsung ngobrol? <a href="https://wa.me/62819797967675?text=Halo%20Momen!%20Mau%20tanya-tanya%20soal%20early%20access%20😄" target="_blank" rel="noopener">Chat kami di WhatsApp</a></p>
+      </form>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer-in">
+      <div>
+        <span class="brand"><span class="brand-dot">📸</span> Momen</span>
+        <p class="footer-note">Foto semua orang, jadi satu album rapi. Eksperimen produk dari PT Nino Genio Indonesia — halaman konsep, produk dalam pengembangan aktif.</p>
+      </div>
+      <div class="footer-links">
+        <a href="https://nino.id/" target="_blank" rel="noopener">nino.id</a>
+        <a href="https://wa.me/62819797967675" target="_blank" rel="noopener">WhatsApp</a>
+        <a href="#faq">FAQ</a>
+      </div>
+    </div>
+    <div class="footer-legal">
+      <span>© <span id="year">2026</span> PT Nino Genio Indonesia. Jakarta, Indonesia.</span>
+      <span>Dibuat dengan ♥ dan terlalu banyak foto acara yang tercecer.</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+// waitlist → WhatsApp handoff (no backend needed; swaps to a real endpoint at build-out)
+document.getElementById('year').textContent = new Date().getFullYear();
+
+document.querySelectorAll('#chips .chip').forEach(function(c){
+  c.addEventListener('click', function(){ c.classList.toggle('on'); });
+});
+
+document.getElementById('wlForm').addEventListener('submit', function(e){
+  e.preventDefault();
+  var nama = document.getElementById('fNama').value.trim();
+  var wa = document.getElementById('fWa').value.trim();
+  var role = document.getElementById('fRole').value;
+  var chips = Array.prototype.map.call(
+    document.querySelectorAll('#chips .chip.on'), function(c){ return c.dataset.v; }
+  );
+  var msg = 'Halo Momen! Saya ' + nama + ' (' + wa + ').\n'
+    + 'Saya: ' + role + '.\n'
+    + 'Jenis acara yang menarik: ' + (chips.length ? chips.join(', ') : '(belum dipilih)') + '.\n'
+    + 'Mau daftar early access 🙏';
+  var ok = document.getElementById('wlSuccess');
+  ok.style.display = 'block';
+  window.open('https://wa.me/62819797967675?text=' + encodeURIComponent(msg), '_blank');
+});
+
+// reveal on scroll
+var io = new IntersectionObserver(function(entries){
+  entries.forEach(function(en){ if(en.isIntersecting){ en.target.classList.add('vis'); io.unobserve(en.target); } });
+},{threshold:.12});
+document.querySelectorAll('.reveal').forEach(function(el){ io.observe(el); });
+</script>
+</body>
+</html>
